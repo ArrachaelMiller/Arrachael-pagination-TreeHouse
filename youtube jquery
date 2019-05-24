@@ -1,0 +1,87 @@
+yt
+html    li cl drop down header
+        li a href  separated link 
+        a href  one more sep. link
+        div container
+
+        div starter template
+
+        div class list group
+
+   beg      var numberofitems= loop .listgroup.length
+            var limit per page=10
+            $loop.list group gt limitperpage -1 + )).hide
+            var total pg =math.round(number of items/limitperpage
+  7         $.pagination.append
+
+  for var i= 2 i<= totalpages i++{
+ 10     $.pagination .append <li id =current-pg > a href= jv void
+  }
+
+  .pagination
+  span </a></li>
+
+  .pagination li.current-pg.onclick function
+  if this .hasclass (active)
+  return false
+
+  else 
+  var currentpg = this.index
+  .pagination li .removeclass active
+  this .addclass active
+ 22  loop .listgroup .hide
+ var grandtotal =limitperpage* currentpg
+
+ for var i= grandtotal-limitperpage i<grandtotal i++
+ loop .listgroup eq +i+ )).show
+
+ }
+ }
+ });
+
+ 32 next page .on (click), function(){
+     var currentpg = .pagination li.active ).index();
+     if currentpg===totalpages){
+         return false
+     }else {
+     }
+ });
+
+
+
+
+
+
+video 38:21
+
+
+codepen
+function showPage (list) {
+for (let i= 0; i < students.length; i++) {
+   students[i].style.display = '';
+}
+}
+for (let i= 0; i< students.length; i++) {
+   if (!list.includes (students[i])) {
+      students [i].style.display = 'none';
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
