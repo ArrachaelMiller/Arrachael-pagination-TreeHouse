@@ -1,107 +1,118 @@
-/******************************************
-Treehouse Techdegree:
-FSJS project 2 - List Filter and Pagination
-******************************************/
+// Global Variables
+const students = document.getElementsByClassName("student-item ");
+const pageHeader = document.querySelector('.page-header');
+let page = 1;
+let studentsPerPage = 10;
+let noRes = document.createElement('h3');
+let h2 = document.getElementsByTagName('h2')[0];
+h2.appendChild(noRes);
+noRes.textContent = "No results found...";
+noRes.style.display = 'none'; 
+
+//Function to show only 10 students on the page
+const showPage = (list, page) => {
+   const highRange = page * studentsPerPage - 1;
+   const lowRange = highRange - 9;
+   for (let i = 0; i < list.length; i++) {
+      if ( i >= lowRange && i <= highRange ) {
+         list[i].style.display = 'block';
+      }else {
+         list[i].style.display = 'none';
+      }
+   } 
+}
+ 
+//Function to append number links at bottom of page
+const appendPageLinks = (list) => {
    
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
-
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-***/
-
-//create variable to store list items in student-list, and variable to show number of items on each page
-const numberPerPage = 10;
-const studentList = document.querySelectorAll ("li.student-item");
-const searchDiv = document.querySelector ('.student-search');
-const noResultDiv = document.querySelector('.no-result');
-const eachStudent = pageList.children;
-const buttonDiv = document.querySelector ('.pagination');
-const buttonUl = buttonDiv.querySelector('ul');
-const ul = document.createElement('ul');
-
-
-function numberPerPage () {
-   let pages = Math.ceil (eachStudent.length/numberPerPage);
-   return pages;
+   const pageNum = Math.ceil(list.length/10);
+   const firstDiv = document.querySelector('.page');
+   const div = document.createElement("div");
+   const ul = document.createElement("ul");
+   firstDiv.appendChild(div);
+   div.classList.add("pagination");
+   div.appendChild(ul);      
+  
+   for (let i = 1; i <= pageNum; i++) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.textContent = i; 
+      a.href = "#";
+      ul.appendChild(li); 
+      li.appendChild(a); 
+      const currentActive = document.querySelector('a')
+      currentActive.className = 'active';
+      a.addEventListener('click', (e) => {
+         showPage(list, i);
+         let current = document.getElementsByClassName('active');
+         if (current.length > 0) {
+            current[0].className = current[0].className.replace("active", "");
+         }
+         e.target.className = 'active';
+         
+      });
+   } 
 }
 
-//loop for page button help from Paul @Hubspot
-const div = document.createElement ('div');
-div.className = 'pagination';
-const ul = document.createElement ('ul');
-div.appendChild(ul);
-parent.appendChild(div);
-for (let i=1; i<= numberOfPages(); i++) {
-   let studentList = document.createElement ('li');
-   let appendPageLinks = document.createElement ('a');
-   appendPageLinks.className = 'active';
-   appendPageLinks.href = '#';
-   appendPageLinks.textContent =(i+1);
-   buttonUl.appendChild(a);
-   pageLinks.appendChild(li);
-}
+//function that displays search bar 
+const searchForm = () => {
+   const searchDiv = document.createElement("div");
+   const input = document.createElement("input");
+   const button = document.createElement("button");
+   pageHeader.appendChild(searchDiv);
+   searchDiv.className = ("student-search");
+   searchDiv.appendChild(input);
+   searchDiv.appendChild(button);
+   input.type = 'text';
+   input.placeholder = "Search"
+   button.type = 'submit';
+   button.textContent = "SUBMIT";
 
-//when page is Loades, this function shows first ten students
-function showFirstTen() {
-   for (let i= 0; i< eachStudent.length; i++) {
-      if ( i < numberPerPage) {
-         eachStudent[i].style.display = '';
-      } else {
-         eachStudent[i].style.display = 'none';
-      }
-    }
- }
- showFirstTen ();
- //SeachBox dynamatically
-function createSeachBox(); { 
-let header = document.getElementsByClassName ('page-header')[0];
-let seachDiv = document. createElement('div');
-searchDiv.className = 'student-search';
-let searchInput = document.createElement ('input');
-   searchInput.placeholder = 'Search for students...';
-   searchDiv.appendChild (searchInput);
-let searchButton = document.createElement('button');
-   searchButton.textContent = 'Search';
-   searchDiv.appendChild(searchButton);
-   header.appendChild(seachDiv);
-   return(seachDiv);
-
-}
-//Adding Event Listener for Seach box when clicked
-const searchResults = [];
-searchButton.addEventListener ('click', () => {
-   let filter =searchInput.value.toLowerCase();
-   searchResults.length = 0;
-   for (let i= 0; i < eachStudent.length; i++) {
-      if (eachStudent [i].innerHTML.indexOf(filter) > -1) {
-         eachStudent[i].style.display = '';
-      } else {
-         eachStudent[i].style.display = 'none';
-         searchResults.push(i);
-      }
-   };
-// When student are hidden, display 'no result'
-   if (searchResults.length === eachStudent.length) {
-      noResultDiv.innerHTML = '<h1> No Results </h1>';
+   const deletePage = () => {
+      const paginationDiv = document.getElementsByClassName('pagination')[0];
+      const parent  = paginationDiv.parentNode;
+      parent.removeChild(paginationDiv);
    }
-   else {
-      noReultsDiv.innerHTML = '';
+   
+   //Filter function
+   const filterNames = () => {
+      let filterValue = input.value.toUpperCase();
+      let list = [];
+      
+      for (let i = 0; i < students.length; i++) {
+         let a = students[i].getElementsByTagName('h3')[0];
+         students[i].style.display = 'none';
+         
+         if (a.innerHTML.toUpperCase().indexOf(filterValue) > -1) {
+            list.push(students[i]);
+         } 
+      }
+      
+console.log(list.length);
+console.log(students.length);
+
+      
+      if (list.length === 0) {
+         noRes.style.display = 'block';
+      }else {
+         noRes.style.display = 'none';
+      }
+
+      deletePage();
+      showPage(list, page);
+      appendPageLinks(list);
    }
-});
 
-// let's divide students between pages...adds a click event listener 
-buttonDiv.addEventListener ('click', (event) => [
-   noResultDiv.innerHTML = '';
-   let buttonDiv = parseInt(event.target.textContent);
-   let mex = buttonNumber = 10;
-   let min = max - 10;
-   for (let i =0; i < eachStudent.length; i++) {
-      if (i >= min && i < man) {
-         eachStudent[i].style.display = '';
-} else {
-   eachStudent[i].style.display = 'none';
-}  
-};
+   //Call event listeners.
+   input.addEventListener('keyup', (e) => {
+      filterNames();
+   })
+   button.addEventListener('click', (e) => {
+      filterNames();
+   })
+}   
 
+//Calling the main functions
+showPage(students, page);
+appendPageLinks(students);
+searchForm();
